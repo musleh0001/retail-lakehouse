@@ -105,3 +105,101 @@ One row represents one payment transaction.
 ### Relationships
 
 One payment belongs to one order.
+
+# Relational Model
+
+## Customer
+
+### Grain
+One row represents one customer.
+
+### Primary Key
+`customer_id`
+
+### Candidate Keys
+- `customer_id`
+- `email` when populated and unique
+
+### Attributes
+
+| Column | Meaning |
+|---|---|
+| customer_id | Internal customer identifier |
+| first_name | Customer first name |
+| last_name | Customer last name |
+| email | Customer email |
+| phone | Customer phone |
+| city | Customer city |
+| country | Customer country |
+| created_at | Customer creation timestamp |
+
+
+# Relationships
+
+## Customer → Order
+
+Cardinality:
+
+`1:N`
+
+A customer can place many orders.
+
+Foreign key:
+
+`orders.customer_id → customers.customer_id`
+
+---
+
+## Order → Order Item
+
+Cardinality:
+
+`1:N`
+
+An order can contain multiple order items.
+
+Foreign key:
+
+`order_items.order_id → orders.order_id`
+
+---
+
+## Product → Order Item
+
+Cardinality:
+
+`1:N`
+
+A product can appear in many order items.
+
+Foreign key:
+
+`order_items.product_id → products.product_id`
+
+---
+
+## Category → Product
+
+Cardinality:
+
+`1:N`
+
+A category can contain many products.
+
+Foreign key:
+
+`products.category_id → categories.category_id`
+
+---
+
+## Order → Payment
+
+Cardinality:
+
+`1:N`
+
+An order can have multiple payment transactions.
+
+Foreign key:
+
+`payments.order_id → orders.order_id`
