@@ -20,7 +20,7 @@ def invalid_customers(df: DataFrame) -> DataFrame:
     return df.filter(
         F.col("customer_id").isNull()
         | (F.col("customer_id") == "")
-        | F.col("created_att").isNull()
+        | F.col("created_at").isNull()
     )
 
 
@@ -62,7 +62,7 @@ def standardize_customers(df: DataFrame) -> DataFrame:
             F.trim("phone").alias("phone"),
             F.initcap(F.trim("city")).alias("city"),
             F.upper(F.trim("country")).alias("country"),
-            F.to_timestamp("created_at").alias("created_at"),
+            F.try_to_timestamp("created_at").alias("created_at"),
         )
         .withColumn(
             "email",
@@ -95,7 +95,7 @@ def standardize_products(df: DataFrame) -> DataFrame:
             F.expr("try_cast(price AS DECIMAL(18, 2))").alias("price"),
             F.expr("try_cast(cost AS DECIMAL(18, 2))").alias("cost"),
             F.lower(F.trim("is_active")).alias("is_active_raw"),
-            F.to_timestamp("created_at").alias("created_at"),
+            F.try_to_timestamp("created_at").alias("created_at"),
         )
         .withColumn(
             "is_active",
@@ -118,10 +118,10 @@ def standardize_orders(df: DataFrame) -> DataFrame:
         F.trim("order_id").alias("order_id"),
         F.trim("customer_id").alias("customer_id"),
         F.upper(F.trim("order_status")).alias("order_status"),
-        F.to_timestamp("order_timestamp").alias("order_timestamp"),
+        F.try_to_timestamp("order_timestamp").alias("order_timestamp"),
         F.expr("try_cast(total_amount AS DECIMAL(18, 2))").alias("total_amount"),
         F.upper(F.trim("currency")).alias("currency"),
-        F.to_timestamp("updated_at").alias("updated_at"),
+        F.try_to_timestamp("updated_at").alias("updated_at"),
     )
 
 
@@ -151,6 +151,6 @@ def standardize_payments(df: DataFrame) -> DataFrame:
         F.upper(F.trim("payment_method")).alias("payment_method"),
         F.upper(F.trim("payment_status")).alias("payment_status"),
         F.expr("try_cast(amount AS DECIMAL(18, 2))").alias("amount"),
-        F.to_timestamp("payment_timestamp").alias("payment_timestamp"),
+        F.try_to_timestamp("payment_timestamp").alias("payment_timestamp"),
         F.upper(F.trim("currency")).alias("currency"),
     )

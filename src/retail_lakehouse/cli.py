@@ -20,6 +20,10 @@ def main() -> None:
     subparsers.add_parser(
         "show-config", help="Display current application configuration"
     )
+    subparsers.add_parser(
+        "build-model",
+        help="Build the initial retail dimensional model",
+    )
 
     args = parser.parse_args()
 
@@ -33,3 +37,7 @@ def main() -> None:
         from retail_lakehouse.config.check_config import check_config
 
         check_config()
+    elif args.command == "build-model":
+        from retail_lakehouse.modeling.pipeline import run_pipeline
+
+        run_pipeline()
