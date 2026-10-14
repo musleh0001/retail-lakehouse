@@ -17,11 +17,30 @@ class FactDefinition:
     foreign_keys: tuple[str, ...]
 
 
+@dataclass(frozen=True)
+class SCDDefinition:
+    dimension_name: str
+    business_key: str
+    surrogate_key: str
+    tracked_columns: tuple[str, ...]
+    overwrite_columns: tuple[str, ...]
+    fixed_columns: tuple[str, ...]
+
+
 DIM_CUSTOMER = DimensionDefinition(
     name="dim_customer",
     grain="One row represents one customer dimension record",
     surrogate_key="customer_key",
     business_key="customer_id",
+)
+
+CUSTOMER_SCD = SCDDefinition(
+    dimension_name="dim_customer",
+    business_key="customer_id",
+    surrogate_key="customer_key",
+    tracked_columns=("city", "country"),
+    overwrite_columns=("email", "phone"),
+    fixed_columns=("customer_id", "created_at"),
 )
 
 DIM_PRODUCT = DimensionDefinition(

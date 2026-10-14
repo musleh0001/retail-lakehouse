@@ -5,6 +5,7 @@ from pyspark.sql import functions as F
 
 from retail_lakehouse.config.logging import configure_logging
 from retail_lakehouse.config.settings import settings
+from retail_lakehouse.modeling.source_reader import read_bronze
 from retail_lakehouse.spark.session import create_spark_session
 
 logger = logging.getLogger(__name__)
@@ -102,5 +103,19 @@ def inspect_model():
         spark.stop()
 
 
+def inspect_bronze():
+    spark = create_spark_session()
+
+    try:
+        datasets = read_bronze(spark)
+
+        for name, df in datasets.items():
+            print(f"\n--- {name.upper()} ---")
+            df.printSchema()
+            df.show(5, truncate=False)
+    finally:
+        spark.stop()
+
+
 if __name__ == "__main__":
-    inspect_model()
+    inspect_bronze()
